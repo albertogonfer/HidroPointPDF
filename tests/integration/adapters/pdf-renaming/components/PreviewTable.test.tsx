@@ -45,7 +45,7 @@ describe('PreviewTable', () => {
         <PreviewTable rows={[]} onConfirm={onConfirm} />
       </MemoryRouter>
     )
-    expect(screen.getByText(/no files|drop files/i)).toBeInTheDocument()
+    expect(screen.getByText(/no files|drop files|sin archivos/i)).toBeInTheDocument()
   })
 
   it('renders a row with original and proposed name', () => {
@@ -60,17 +60,17 @@ describe('PreviewTable', () => {
         <PreviewTable rows={[]} onConfirm={onConfirm} />
       </MemoryRouter>
     )
-    expect(screen.queryByRole('button', { name: /confirm|write/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /confirm|write|escribir/i })).not.toBeInTheDocument()
   })
 
   it('confirm button is enabled when rows exist', () => {
     renderTable([mockRow()])
-    expect(screen.getByRole('button', { name: /confirm|write/i })).not.toBeDisabled()
+    expect(screen.getByRole('button', { name: /confirm|write|escribir/i })).not.toBeDisabled()
   })
 
   it('calls onConfirm when confirm button clicked', () => {
     renderTable([mockRow()])
-    fireEvent.click(screen.getByRole('button', { name: /confirm|write/i }))
+    fireEvent.click(screen.getByRole('button', { name: /confirm|write|escribir/i }))
     expect(onConfirm).toHaveBeenCalledOnce()
   })
 
@@ -115,7 +115,7 @@ describe('PreviewTable', () => {
       finalName: 'original.pdf',
     })
     renderTable([lowConfRow])
-    expect(screen.getByText(/manual|review|low/i)).toBeInTheDocument()
+    expect(screen.getByText(/manual|review|low|baja/i)).toBeInTheDocument()
   })
 
   it('flags stub row with visual indicator', () => {
@@ -134,7 +134,7 @@ describe('PreviewTable', () => {
       finalName: 'original.pdf',
     })
     renderTable([stubRow])
-    expect(screen.getByText(/manual|review|stub/i)).toBeInTheDocument()
+    expect(screen.getByText(/manual|review|stub.*revisar/i)).toBeInTheDocument()
   })
 
   it('"Reportar problema" link appears only on override rows', () => {

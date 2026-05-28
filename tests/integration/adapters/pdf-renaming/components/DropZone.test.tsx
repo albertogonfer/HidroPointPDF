@@ -66,7 +66,7 @@ describe('DropZone', () => {
 
   it('renders drop zone with instructions', () => {
     render(<DropZone />)
-    expect(screen.getByText(/drag.*drop|drop.*pdf/i)).toBeInTheDocument()
+    expect(screen.getByText(/drag.*drop|drop.*pdf|soltá|solta/i)).toBeInTheDocument()
   })
 
   it('shows drag-active state when dragging over', () => {
