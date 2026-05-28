@@ -39,6 +39,19 @@ CREATE TABLE IF NOT EXISTS invoice_registrations (
   amount         NUMERIC(10,2),
   registered     BOOLEAN DEFAULT false
 );
+
+CREATE TABLE IF NOT EXISTS feedback_reports (
+  id                   SERIAL PRIMARY KEY,
+  company_id           TEXT,
+  original_name        TEXT,
+  proposed_name        TEXT,
+  expected_name        TEXT,
+  description          TEXT,
+  had_attachment       BOOLEAN,
+  github_issue_url     TEXT,
+  github_issue_number  INTEGER,
+  created_at           TIMESTAMPTZ DEFAULT now()
+);
 `
 
 export async function initDb(): Promise<PGlite> {
