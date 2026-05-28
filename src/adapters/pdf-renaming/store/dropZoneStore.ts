@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import type { PreviewRow } from '../../../application/pdf-renaming/model/PreviewRow'
+import type { ParsedInvoice } from '../../../domain/pdf-renaming/model/types'
 
 export type { PreviewRow }
 
