@@ -54,7 +54,10 @@ export default function HistoryPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-semibold text-gray-900">Rename History</h1>
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Rename History</h1>
+        <p className="mt-1 text-sm text-gray-500">All past rename jobs, stored locally in your browser.</p>
+      </div>
       <HistoryList />
     </div>
   )

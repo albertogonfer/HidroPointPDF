@@ -2,11 +2,6 @@ import { useCallback, useRef } from 'react'
 import { useDropZoneStore } from '../store/dropZoneStore'
 import { processFile } from '../../../application/pdf-renaming/use-cases'
 
-/**
- * Drag-and-drop area accepting multiple PDF files.
- * On drop: reads files, parses them through the parser pipeline,
- * and populates the preview rows in dropZoneStore.
- */
 export function DropZone() {
   const { dragActive, confirming, setDragActive, setPendingFiles, setPreviewRows, setConfirming } =
     useDropZoneStore()
@@ -48,6 +43,8 @@ export function DropZone() {
     [setDragActive, setPendingFiles, setPreviewRows, setConfirming],
   )
 
+  const isLoading = confirming || processingRef.current
+
   return (
     <div
       data-testid="drop-zone"
@@ -56,33 +53,35 @@ export function DropZone() {
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       className={[
-        'flex min-h-40 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed p-8 transition-colors',
+        'relative flex min-h-44 cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed p-10 text-center transition-all duration-150',
         dragActive
-          ? 'border-blue-500 bg-blue-50 text-blue-700'
-          : 'border-gray-300 bg-gray-50 text-gray-500 hover:border-gray-400',
+          ? 'border-purple-400 bg-purple-50 shadow-inner'
+          : 'border-gray-200 bg-white hover:border-purple-300 hover:bg-purple-50/40',
       ].join(' ')}
     >
-      {confirming || processingRef.current ? (
-        <p className="text-sm">Processing files…</p>
-      ) : (
-        <>
-          <svg
-            aria-hidden="true"
-            className="mb-3 h-10 w-10"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={1.5}
-              d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
-            />
+      {isLoading ? (
+        <div className="flex flex-col items-center gap-3 text-purple-600">
+          <svg className="h-6 w-6 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
           </svg>
-          <p className="text-sm font-medium">Drag & drop PDF files here</p>
-          <p className="mt-1 text-xs">Multiple files supported</p>
-        </>
+          <p className="text-sm font-medium">Processing files…</p>
+        </div>
+      ) : (
+        <div className={['flex flex-col items-center gap-3', dragActive ? 'text-purple-600' : 'text-gray-400'].join(' ')}>
+          <div className={['flex h-14 w-14 items-center justify-center rounded-2xl transition-colors', dragActive ? 'bg-purple-100' : 'bg-gray-100'].join(' ')}>
+            <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
+                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+            </svg>
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-gray-700">
+              {dragActive ? 'Release to add files' : 'Drop PDF files here'}
+            </p>
+            <p className="mt-0.5 text-xs text-gray-400">Multiple files supported — invoices only</p>
+          </div>
+        </div>
       )}
     </div>
   )

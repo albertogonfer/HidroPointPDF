@@ -41,13 +41,25 @@ export default function IntakePage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-semibold text-gray-900">PDF Rename</h1>
+      {/* Page header */}
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Rename PDFs</h1>
+        <p className="mt-1 text-sm text-gray-500">
+          Drop invoice PDFs — the app proposes a normalized filename for each one.
+        </p>
+      </div>
+
       <BrowserWarning fsaaSupported={fsaaSupported} />
+
       {fsaaErrorMessage && (
-        <div role="alert" className="rounded border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div role="alert" className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <svg className="mt-0.5 h-4 w-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clipRule="evenodd" />
+          </svg>
           {fsaaErrorMessage}
         </div>
       )}
+
       <DropZone />
       <PreviewTable rows={previewRows} onConfirm={handleConfirm} />
     </div>

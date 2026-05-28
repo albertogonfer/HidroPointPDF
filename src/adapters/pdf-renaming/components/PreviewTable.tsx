@@ -6,82 +6,111 @@ interface PreviewTableProps {
   onConfirm: () => void
 }
 
-/**
- * Table showing original name | proposed name | company | override input | status.
- * Each row is individually overrideable via a text input.
- * Confirm button is disabled until at least one row exists.
- */
+const statusConfig = {
+  override:  { label: 'override',           className: 'bg-amber-50 text-amber-700 ring-1 ring-amber-200' },
+  stub:      { label: 'stub — review',     className: 'bg-red-50 text-red-600 ring-1 ring-red-200' },
+  low:       { label: 'low confidence',    className: 'bg-orange-50 text-orange-600 ring-1 ring-orange-200' },
+  ready:     { label: 'ready',             className: 'bg-green-50 text-green-700 ring-1 ring-green-200' },
+}
+
+function StatusBadge({ row }: { row: PreviewRow }) {
+  const key = row.hasOverride
+    ? 'override'
+    : row.parsedInvoice?.confidence === 'stub'
+      ? 'stub'
+      : row.parsedInvoice?.confidence === 'low'
+        ? 'low'
+        : 'ready'
+  const { label, className } = statusConfig[key]
+  return (
+    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${className}`}>
+      {label}
+    </span>
+  )
+}
+
 export function PreviewTable({ rows, onConfirm }: PreviewTableProps) {
   const { updateFinalName } = useDropZoneStore()
 
   if (!rows.length) {
     return (
-      <div className="rounded-lg border border-gray-200 p-8 text-center text-gray-400">
-        <p>No files to preview — drop PDF files above</p>
+      <div className="flex flex-col items-center gap-2 rounded-2xl border border-dashed border-gray-200 bg-white py-12 text-center">
+        <svg className="h-8 w-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
+            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        <p className="text-sm text-gray-400">No files to preview yet</p>
       </div>
     )
   }
 
   return (
     <div className="space-y-4">
-      <div className="overflow-x-auto rounded-lg border border-gray-200">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-50 text-xs uppercase tracking-wide text-gray-500">
-            <tr>
-              <th className="px-4 py-3 text-left">Original name</th>
-              <th className="px-4 py-3 text-left">Company</th>
-              <th className="px-4 py-3 text-left">Final name (editable)</th>
-              <th className="px-4 py-3 text-left">Status</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {rows.map((row, index) => (
-              <tr key={`${row.file.name}-${index}`} className="bg-white hover:bg-gray-50">
-                <td className="px-4 py-3 font-mono text-xs text-gray-700">{row.file.name}</td>
-                <td className="px-4 py-3 text-gray-600">
-                  {row.parsedInvoice?.companyId ?? <span className="text-gray-400">—</span>}
-                </td>
-                <td className="px-4 py-3">
-                  <input
-                    type="text"
-                    value={row.finalName}
-                    onChange={(e) => updateFinalName(index, e.target.value)}
-                    className="w-full rounded border border-gray-300 px-2 py-1 font-mono text-xs focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  />
-                </td>
-                <td className="px-4 py-3">
-                  {row.hasOverride ? (
-                    <span className="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
-                      override
-                    </span>
-                  ) : row.parsedInvoice?.confidence === 'stub' ? (
-                    <span className="inline-flex items-center rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700">
-                      stub — manual review
-                    </span>
-                  ) : row.parsedInvoice?.confidence === 'low' ? (
-                    <span className="inline-flex items-center rounded-full bg-orange-100 px-2 py-0.5 text-xs font-medium text-orange-700">
-                      low confidence — manual review
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
-                      ready
-                    </span>
-                  )}
-                </td>
+      {/* Card wrapper */}
+      <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+        <div className="border-b border-gray-100 px-5 py-3">
+          <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+            {rows.length} file{rows.length !== 1 ? 's' : ''} to rename
+          </span>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-gray-100 bg-gray-50/60">
+                <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Original</th>
+                <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Company</th>
+                <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Final name</th>
+                <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {rows.map((row, index) => (
+                <tr key={`${row.file.name}-${index}`} className="border-b border-gray-50 transition-colors last:border-0 hover:bg-gray-50/50">
+                  <td className="max-w-52 truncate px-5 py-3 font-mono text-xs text-gray-500" title={row.file.name}>
+                    {row.file.name}
+                  </td>
+                  <td className="px-5 py-3">
+                    {row.parsedInvoice?.companyId ? (
+                      <span className="inline-flex items-center rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700">
+                        {row.parsedInvoice.companyId}
+                      </span>
+                    ) : (
+                      <span className="text-gray-300">—</span>
+                    )}
+                  </td>
+                  <td className="px-5 py-3">
+                    <input
+                      type="text"
+                      value={row.finalName}
+                      onChange={(e) => updateFinalName(index, e.target.value)}
+                      className="w-full min-w-64 rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1.5 font-mono text-xs text-gray-800 transition-colors focus:border-purple-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-100"
+                    />
+                  </td>
+                  <td className="px-5 py-3">
+                    <StatusBadge row={row} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      <div className="flex justify-end">
+      <div className="flex items-center justify-between">
+        <p className="text-xs text-gray-400">
+          Edit any filename before confirming. Changes are tracked.
+        </p>
         <button
           type="button"
           disabled={rows.length === 0}
           onClick={onConfirm}
-          className="rounded-md bg-blue-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-xl bg-purple-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-purple-500 disabled:cursor-not-allowed disabled:opacity-40"
         >
-          Confirm &amp; write files
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+          </svg>
+          Write files
         </button>
       </div>
     </div>
