@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import { PreviewTable } from '@/adapters/pdf-renaming/components/PreviewTable'
 import { useDropZoneStore } from '@/adapters/pdf-renaming/store/dropZoneStore'
 import type { PreviewRow } from '@/adapters/pdf-renaming/store/dropZoneStore'
@@ -24,6 +25,14 @@ const mockRow = (overrides: Partial<PreviewRow> = {}): PreviewRow => ({
 
 const onConfirm = vi.fn()
 
+function renderTable(rows: PreviewRow[]) {
+  return render(
+    <MemoryRouter>
+      <PreviewTable rows={rows} onConfirm={onConfirm} />
+    </MemoryRouter>
+  )
+}
+
 describe('PreviewTable', () => {
   beforeEach(() => {
     useDropZoneStore.getState().reset()
@@ -31,46 +40,49 @@ describe('PreviewTable', () => {
   })
 
   it('shows empty state message when no rows', () => {
-    render(<PreviewTable rows={[]} onConfirm={onConfirm} />)
+    render(
+      <MemoryRouter>
+        <PreviewTable rows={[]} onConfirm={onConfirm} />
+      </MemoryRouter>
+    )
     expect(screen.getByText(/no files|drop files/i)).toBeInTheDocument()
   })
 
   it('renders a row with original and proposed name', () => {
-    const rows = [mockRow()]
-    render(<PreviewTable rows={rows} onConfirm={onConfirm} />)
+    renderTable([mockRow()])
     expect(screen.getByText('original.pdf')).toBeInTheDocument()
-    // Final name is in the override input
     expect(screen.getByDisplayValue('2024-01-01 FRA. 2024001 GARCIA, JOSE')).toBeInTheDocument()
   })
 
   it('confirm button is not present when no rows (empty state shown)', () => {
-    render(<PreviewTable rows={[]} onConfirm={onConfirm} />)
+    render(
+      <MemoryRouter>
+        <PreviewTable rows={[]} onConfirm={onConfirm} />
+      </MemoryRouter>
+    )
     expect(screen.queryByRole('button', { name: /confirm|write/i })).not.toBeInTheDocument()
   })
 
   it('confirm button is enabled when rows exist', () => {
-    const rows = [mockRow()]
-    render(<PreviewTable rows={rows} onConfirm={onConfirm} />)
+    renderTable([mockRow()])
     expect(screen.getByRole('button', { name: /confirm|write/i })).not.toBeDisabled()
   })
 
   it('calls onConfirm when confirm button clicked', () => {
-    const rows = [mockRow()]
-    render(<PreviewTable rows={rows} onConfirm={onConfirm} />)
+    renderTable([mockRow()])
     fireEvent.click(screen.getByRole('button', { name: /confirm|write/i }))
     expect(onConfirm).toHaveBeenCalledOnce()
   })
 
   it('renders an input for overriding the final name', () => {
-    const rows = [mockRow()]
-    render(<PreviewTable rows={rows} onConfirm={onConfirm} />)
+    renderTable([mockRow()])
     expect(screen.getByRole('textbox')).toBeInTheDocument()
   })
 
   it('dispatches store update on override input change', () => {
     const rows = [mockRow()]
     useDropZoneStore.setState({ previewRows: rows })
-    render(<PreviewTable rows={rows} onConfirm={onConfirm} />)
+    renderTable(rows)
     const input = screen.getByRole('textbox')
     fireEvent.change(input, { target: { value: 'custom-name.pdf' } })
     expect(useDropZoneStore.getState().previewRows[0].finalName).toBe('custom-name.pdf')
@@ -78,14 +90,12 @@ describe('PreviewTable', () => {
   })
 
   it('shows company name in the row', () => {
-    const rows = [mockRow()]
-    render(<PreviewTable rows={rows} onConfirm={onConfirm} />)
+    renderTable([mockRow()])
     expect(screen.getByText(/INTERPARTNER/)).toBeInTheDocument()
   })
 
   it('shows override badge when row has override', () => {
-    const rows = [mockRow({ hasOverride: true })]
-    render(<PreviewTable rows={rows} onConfirm={onConfirm} />)
+    renderTable([mockRow({ hasOverride: true })])
     expect(screen.getByText(/override/i)).toBeInTheDocument()
   })
 
@@ -104,8 +114,7 @@ describe('PreviewTable', () => {
       proposedName: 'original.pdf',
       finalName: 'original.pdf',
     })
-    render(<PreviewTable rows={[lowConfRow]} onConfirm={onConfirm} />)
-    // The row should show a visual indicator that manual review/override is needed
+    renderTable([lowConfRow])
     expect(screen.getByText(/manual|review|low/i)).toBeInTheDocument()
   })
 
@@ -124,7 +133,30 @@ describe('PreviewTable', () => {
       proposedName: 'original.pdf',
       finalName: 'original.pdf',
     })
-    render(<PreviewTable rows={[stubRow]} onConfirm={onConfirm} />)
+    renderTable([stubRow])
     expect(screen.getByText(/manual|review|stub/i)).toBeInTheDocument()
+  })
+
+  it('"Reportar problema" link appears only on override rows', () => {
+    const overrideRow = mockRow({ hasOverride: true })
+    const normalRow = mockRow({ hasOverride: false })
+    renderTable([overrideRow, normalRow])
+    const links = screen.getAllByText(/reportar problema/i)
+    expect(links).toHaveLength(1)
+  })
+
+  it('"Reportar problema" link contains correct query params', () => {
+    const row = mockRow({
+      hasOverride: true,
+      finalName: '2024-01-01 FRA. 2024001 GARCIA, JOSE',
+    })
+    renderTable([row])
+    const link = screen.getByText(/reportar problema/i).closest('a')
+    expect(link).not.toBeNull()
+    const href = link?.getAttribute('href') ?? ''
+    expect(href).toMatch(/companyId=INTERPARTNER/)
+    expect(href).toMatch(/originalName=/)
+    expect(href).toMatch(/proposedName=/)
+    expect(href).toMatch(/expectedName=/)
   })
 })

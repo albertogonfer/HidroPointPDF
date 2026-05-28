@@ -34,11 +34,11 @@ Chain strategy: feature-branch-chain
 
 ## Phase 2: UI and Wiring
 
-- [ ] 2.1 [domain: pdf] RED: add `tests/integration/adapters/pdf-renaming/components/PreviewTable.test.tsx` for “Report issue” visibility only on `hasOverride` rows.
-- [ ] 2.2 [domain: pdf] GREEN: modify `src/adapters/pdf-renaming/components/PreviewTable.tsx` to link overridden rows to `/feedback` with company/original/proposed/final query params.
-- [ ] 2.3 [domain: pdf] RED: add `tests/integration/adapters/feedback-reporting/pages/FeedbackPage.test.tsx` for prefill, required Spanish errors, consent gate, and success/error states.
-- [ ] 2.4 [domain: pdf] GREEN: create `src/adapters/feedback-reporting/components/FeedbackForm.tsx`, `pages/FeedbackPage.tsx`, and `store/feedbackStore.ts` using the submit use-case.
-- [ ] 2.5 [domain: pdf] REFACTOR: modify `src/router.tsx` for lazy `/feedback` routing and keep loading/navigation behavior consistent.
+- [x] 2.1 [domain: pdf] RED: add `tests/integration/adapters/pdf-renaming/components/PreviewTable.test.tsx` for “Report issue” visibility only on `hasOverride` rows.
+- [x] 2.2 [domain: pdf] GREEN: modify `src/adapters/pdf-renaming/components/PreviewTable.tsx` to link overridden rows to `/feedback` with company/original/proposed/final query params.
+- [x] 2.3 [domain: pdf] RED: add `tests/integration/adapters/feedback-reporting/pages/FeedbackPage.test.tsx` for prefill, required Spanish errors, consent gate, and success/error states.
+- [x] 2.4 [domain: pdf] GREEN: create `src/adapters/feedback-reporting/components/FeedbackForm.tsx`, `pages/FeedbackPage.tsx`, and `store/feedbackStore.ts` using the submit use-case.
+- [x] 2.5 [domain: pdf] REFACTOR: modify `src/router.tsx` for lazy `/feedback` routing and keep loading/navigation behavior consistent.
 
 ## Phase 3: Infrastructure and Verification
 

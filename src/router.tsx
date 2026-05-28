@@ -4,6 +4,7 @@ import { Suspense, lazy } from 'react'
 const IntakePage = lazy(() => import('./adapters/pdf-renaming/pages/IntakePage'))
 const HistoryPage = lazy(() => import('./adapters/pdf-renaming/pages/HistoryPage'))
 const SettingsPage = lazy(() => import('./adapters/pdf-renaming/pages/SettingsPage'))
+const FeedbackPage = lazy(() => import('./adapters/feedback-reporting/pages/FeedbackPage'))
 
 export function AppRouter() {
   return (
@@ -63,6 +64,7 @@ export function AppRouter() {
               <Route path="/" element={<IntakePage />} />
               <Route path="/history" element={<HistoryPage />} />
               <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/feedback" element={<FeedbackPage />} />
             </Routes>
           </Suspense>
         </main>
