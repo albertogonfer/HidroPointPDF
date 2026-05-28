@@ -1,4 +1,5 @@
 {
+  "buildCommand": "pnpm approve-builds --all && pnpm build",
   "headers": [
     {
       "source": "/api/(.*)",
