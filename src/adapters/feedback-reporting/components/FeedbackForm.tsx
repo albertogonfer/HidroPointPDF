@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { submitFeedback } from '@/application/feedback-reporting/use-cases/submitFeedback'
 import { VercelFunctionFeedbackSubmitter } from '@/infrastructure/feedback/VercelFunctionFeedbackSubmitter'
 import { PGliteFeedbackRepository } from '@/infrastructure/db/PGliteFeedbackRepository'
@@ -14,6 +15,7 @@ interface FeedbackFormProps {
 const MAX_FILE_SIZE = 3 * 1024 * 1024
 
 export function FeedbackForm({ companyId, originalName, proposedName, expectedName: initialExpectedName }: FeedbackFormProps) {
+  const { t } = useTranslation()
   const [description, setDescription] = useState('')
   const [expectedName, setExpectedName] = useState(initialExpectedName)
   const [consent, setConsent] = useState(false)
@@ -26,7 +28,7 @@ export function FeedbackForm({ companyId, originalName, proposedName, expectedNa
     const selected = e.target.files?.[0] ?? null
     setFileError(null)
     if (selected && selected.size > MAX_FILE_SIZE) {
-      setFileError('El archivo excede el tamaño máximo de 3 MB.')
+      setFileError(t('feedbackForm.fileSizeError'))
       setFile(null)
       return
     }
@@ -48,10 +50,10 @@ export function FeedbackForm({ companyId, originalName, proposedName, expectedNa
       )
       setSuccess(result.issueUrl, result.issueNumber)
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Error desconocido al enviar el reporte.'
+      const message = err instanceof Error ? err.message : t('feedbackForm.errorPrefix')
       setError(message.startsWith('validation:')
-        ? 'Por favor completá los campos requeridos antes de enviar.'
-        : 'Ocurrió un error al enviar el reporte. Intentá nuevamente.')
+        ? t('feedbackForm.errorPrefix')
+        : t('feedbackForm.errorPrefix'))
     }
   }
 
@@ -62,14 +64,14 @@ export function FeedbackForm({ companyId, originalName, proposedName, expectedNa
       {/* Success banner */}
       {status === 'success' && issueUrl && (
         <div className="rounded-xl bg-green-50 p-4 text-sm text-green-800 ring-1 ring-green-200">
-          Reporte enviado —{' '}
+          {t('feedbackForm.successPrefix')}{' '}
           <a
             href={issueUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="font-semibold underline"
           >
-            ver issue #{issueNumber}
+            {t('feedbackForm.successLink', { number: issueNumber })}
           </a>
         </div>
       )}
@@ -84,7 +86,7 @@ export function FeedbackForm({ companyId, originalName, proposedName, expectedNa
       {/* Description */}
       <div className="space-y-1.5">
         <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-          Descripción del error
+          {t('feedbackForm.descriptionLabel')}
         </label>
         <textarea
           id="description"
@@ -93,7 +95,7 @@ export function FeedbackForm({ companyId, originalName, proposedName, expectedNa
           rows={4}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="Describí qué salió mal con el nombre propuesto..."
+          placeholder={t('feedbackForm.description')}
           className="w-full rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm text-gray-800 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-100"
         />
       </div>
@@ -101,7 +103,7 @@ export function FeedbackForm({ companyId, originalName, proposedName, expectedNa
       {/* Expected name */}
       <div className="space-y-1.5">
         <label htmlFor="expectedName" className="block text-sm font-medium text-gray-700">
-          Nombre correcto del archivo
+          {t('feedbackForm.expectedNameLabel')}
         </label>
         <input
           id="expectedName"
@@ -129,9 +131,7 @@ export function FeedbackForm({ companyId, originalName, proposedName, expectedNa
             }}
             className="mt-0.5 h-4 w-4 rounded border-amber-400 text-amber-600 focus:ring-amber-300"
           />
-          <span>
-            Este archivo contiene datos de facturas. Confirmo que quiero compartirlo para ayudar a corregir el error.
-          </span>
+          <span>{t('feedbackForm.consentLabel')}</span>
         </label>
       </div>
 
@@ -139,7 +139,7 @@ export function FeedbackForm({ companyId, originalName, proposedName, expectedNa
       {consent && (
         <div className="space-y-1.5">
           <label htmlFor="file" className="block text-sm font-medium text-gray-700">
-            Adjuntar PDF (opcional, máx. 3 MB)
+            {t('feedbackForm.fileLabel')}
           </label>
           <input
             id="file"
@@ -172,10 +172,10 @@ export function FeedbackForm({ companyId, originalName, proposedName, expectedNa
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
             </svg>
-            Enviando…
+            {t('feedbackForm.submitting')}
           </>
         ) : (
-          'Enviar reporte'
+          t('feedbackForm.submitButton')
         )}
       </button>
     </form>
