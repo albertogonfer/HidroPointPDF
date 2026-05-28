@@ -26,11 +26,11 @@ Chain strategy: feature-branch-chain
 
 ## Phase 1: Foundation
 
-- [ ] 1.1 [domain: pdf] RED: add `tests/unit/domain/feedback-reporting/model/FeedbackReport.test.ts` for required fields, consent/file rules, and 3MB rejection.
-- [ ] 1.2 [domain: pdf] GREEN: create `src/domain/feedback-reporting/model/FeedbackReport.ts` plus `ports/IFeedbackSubmitter.ts` and `ports/IFeedbackRepository.ts`.
-- [ ] 1.3 [domain: pdf] RED: add `tests/unit/application/feedback-reporting/use-cases/submitFeedback.test.ts` for validate → submit → save and failure paths.
-- [ ] 1.4 [domain: pdf] GREEN: create `src/application/feedback-reporting/use-cases/submitFeedback.ts` and export via `src/application/feedback-reporting/use-cases/index.ts`.
-- [ ] 1.5 [domain: pdf] REFACTOR: update `src/infrastructure/db/index.ts` and `src/infrastructure/db/schema.sql` with `feedback_reports`; cover in `tests/unit/infrastructure/db/db-init.test.ts`.
+- [x] 1.1 [domain: pdf] RED: add `tests/unit/domain/feedback-reporting/model/FeedbackReport.test.ts` for required fields, consent/file rules, and 3MB rejection.
+- [x] 1.2 [domain: pdf] GREEN: create `src/domain/feedback-reporting/model/FeedbackReport.ts` plus `ports/IFeedbackSubmitter.ts` and `ports/IFeedbackRepository.ts`.
+- [x] 1.3 [domain: pdf] RED: add `tests/unit/application/feedback-reporting/use-cases/submitFeedback.test.ts` for validate → submit → save and failure paths.
+- [x] 1.4 [domain: pdf] GREEN: create `src/application/feedback-reporting/use-cases/submitFeedback.ts` and export via `src/application/feedback-reporting/use-cases/index.ts`.
+- [x] 1.5 [domain: pdf] REFACTOR: update `src/infrastructure/db/index.ts` and `src/infrastructure/db/schema.sql` with `feedback_reports`; cover in `tests/unit/infrastructure/db/db-init.test.ts`.
 
 ## Phase 2: UI and Wiring
 
@@ -42,8 +42,8 @@ Chain strategy: feature-branch-chain
 
 ## Phase 3: Infrastructure and Verification
 
-- [ ] 3.1 [domain: pdf] RED: add `tests/integration/infrastructure/feedback/VercelFunctionFeedbackSubmitter.test.ts` for POST `/api/feedback` success and plain-language failure mapping.
-- [ ] 3.2 [domain: pdf] GREEN: create `src/infrastructure/feedback/VercelFunctionFeedbackSubmitter.ts` and `PGliteFeedbackRepository.ts`.
+- [x] 3.1 [domain: pdf] RED: add `tests/integration/infrastructure/feedback/VercelFunctionFeedbackSubmitter.test.ts` for POST `/api/feedback` success and plain-language failure mapping.
+- [x] 3.2 [domain: pdf] GREEN: create `src/infrastructure/feedback/VercelFunctionFeedbackSubmitter.ts` and `PGliteFeedbackRepository.ts`.
 - [x] 3.3 [domain: pdf] RED: add `tests/integration/api/feedback.test.ts` for multipart-only requests, PDF magic bytes, missing fields, GitHub body format, and attachment/no-attachment flows.
 - [x] 3.4 [domain: pdf] GREEN: create `api/feedback.ts` and modify `vercel.json` to exclude `/api/` from COOP/COEP while using env-only secrets.
-- [ ] 3.5 [domain: pdf] REFACTOR: run `npx vitest run` and fix any cross-layer regressions before apply moves to verification.
+- [x] 3.5 [domain: pdf] REFACTOR: run `npx vitest run` and fix any cross-layer regressions before apply moves to verification.
