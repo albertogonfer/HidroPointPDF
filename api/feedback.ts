@@ -12,7 +12,7 @@
  *   GITHUB_TOKEN, GITHUB_REPO  (format: "owner/repo")
  */
 
-export const config = { runtime: 'nodejs20.x' }
+export const config = { runtime: 'nodejs' }
 
 const MAX_FILE_BYTES = 3 * 1024 * 1024 // 3 MB
 const PDF_MAGIC = [0x25, 0x50, 0x44, 0x46] // %PDF
