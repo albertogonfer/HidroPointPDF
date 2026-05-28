@@ -1,0 +1,76 @@
+schema: spec-driven
+project: hidropoint
+initialized: 2026-05-27
+
+context: |
+  Project: HidroPoint Barcelona — water leak detection company
+  Stack: React 19 + TypeScript + Vite, shadcn/ui + Tailwind CSS
+  State: Zustand; Routing: React Router v7
+  PDF: pdf-lib (generate/rename) + pdfjs-dist (parse/render)
+  DB: PGlite (PostgreSQL WASM, in-browser, no server required)
+  Hosting: Vercel/Netlify (static + edge functions for server-side PDF if needed)
+  Testing: Vitest (unit + integration) + Playwright (E2E)
+  Domains: pdf-renaming, invoice-management, banking-reconciliation, dashboard
+
+strict_tdd: true
+
+testing:
+  runner:
+    framework: vitest
+    command: "pnpm test"
+  layers:
+    unit:
+      available: true
+      tool: vitest
+    integration:
+      available: true
+      tool: "@testing-library/react + vitest"
+    e2e:
+      available: true
+      tool: playwright
+      command: "pnpm test:e2e"
+  coverage:
+    available: true
+    command: "pnpm test --coverage"
+    threshold: 80
+  quality:
+    linter:
+      available: true
+      command: "pnpm lint"
+      tool: eslint
+    type_checker:
+      available: true
+      command: "pnpm typecheck"
+      tool: typescript
+    formatter:
+      available: true
+      command: "pnpm format"
+      tool: prettier
+
+rules:
+  proposal:
+    - Include rollback plan for risky changes
+    - State which PDF domain (renaming, invoice, reconciliation, dashboard) is affected
+  specs:
+    - Use Given/When/Then for scenarios
+    - Use RFC 2119 keywords (MUST, SHALL, SHOULD, MAY)
+    - Reference PGlite schema tables when persistence is involved
+  design:
+    - Include sequence diagrams for complex flows (PDF parsing, reconciliation matching)
+    - Document architecture decisions with rationale
+    - Note whether a change requires Vercel edge function or stays fully client-side
+  tasks:
+    - Group by phase, use hierarchical numbering
+    - Keep tasks completable in one session
+    - Tag tasks with domain: pdf | invoice | reconciliation | dashboard
+  apply:
+    - Follow existing code patterns
+    tdd: true
+    test_command: "pnpm test"
+  verify:
+    test_command: "pnpm test"
+    build_command: "pnpm build"
+    coverage_threshold: 80
+  archive:
+    - Warn before merging destructive deltas
+    - Update openspec/specs/{domain}/spec.md after every archived change
