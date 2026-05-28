@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import type { PreviewRow } from '../store/dropZoneStore'
 import { useDropZoneStore } from '../store/dropZoneStore'
 
@@ -87,7 +88,22 @@ export function PreviewTable({ rows, onConfirm }: PreviewTableProps) {
                     />
                   </td>
                   <td className="px-5 py-3">
-                    <StatusBadge row={row} />
+                    <div className="flex items-center gap-2">
+                      <StatusBadge row={row} />
+                      {row.hasOverride && (
+                        <Link
+                          to={`/feedback?${new URLSearchParams({
+                            companyId: row.parsedInvoice?.companyId ?? '',
+                            originalName: row.file.name,
+                            proposedName: row.proposedName,
+                            expectedName: row.finalName,
+                          }).toString()}`}
+                          className="text-xs font-medium text-purple-600 hover:text-purple-500 hover:underline"
+                        >
+                          Reportar problema
+                        </Link>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}
