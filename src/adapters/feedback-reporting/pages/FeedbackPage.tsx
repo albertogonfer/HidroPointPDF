@@ -1,7 +1,9 @@
 import { useSearchParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { FeedbackForm } from '../components/FeedbackForm'
 
 export default function FeedbackPage() {
+  const { t } = useTranslation()
   const [searchParams] = useSearchParams()
 
   const companyId = searchParams.get('companyId') ?? ''
@@ -12,9 +14,9 @@ export default function FeedbackPage() {
   return (
     <div className="mx-auto max-w-xl">
       <div className="mb-6">
-        <h1 className="text-xl font-semibold text-gray-900">Reportar problema de parseo</h1>
+        <h1 className="text-xl font-semibold text-gray-900">{t('feedbackPage.title')}</h1>
         <p className="mt-1 text-sm text-gray-500">
-          Completá el formulario para ayudarnos a mejorar el analizador de PDFs.
+          {t('feedbackPage.subtitle')}
         </p>
       </div>
 
