@@ -1,9 +1,13 @@
+import { useTranslation } from 'react-i18next'
+
 export default function SettingsPage() {
+  const { t } = useTranslation()
+
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Settings</h1>
-        <p className="mt-1 text-sm text-gray-500">Renaming rule templates and company configuration.</p>
+        <h1 className="text-2xl font-semibold tracking-tight text-gray-900">{t('settingsPage.title')}</h1>
+        <p className="mt-1 text-sm text-gray-500">{t('settingsPage.subtitle')}</p>
       </div>
 
       <div className="rounded-2xl border border-dashed border-gray-200 bg-white px-8 py-12 text-center">
@@ -14,9 +18,9 @@ export default function SettingsPage() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
           </svg>
         </div>
-        <p className="text-sm font-medium text-gray-600">Coming soon</p>
+        <p className="text-sm font-medium text-gray-600">{t('settingsPage.comingSoon')}</p>
         <p className="mt-1 text-xs text-gray-400">
-          AXA and GENERALI templates will be configurable here once 2025 sample files are available.
+          {t('settingsPage.comingSoonDetail')}
         </p>
       </div>
     </div>

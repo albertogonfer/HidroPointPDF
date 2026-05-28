@@ -1,9 +1,11 @@
 import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { HistoryList } from '../components/HistoryList'
 import { useHistoryStore } from '../store/historyStore'
 import { getDb } from '../../../infrastructure/db/index'
 
 export default function HistoryPage() {
+  const { t } = useTranslation()
   const { setJobs, setTotal, pageSize, page } = useHistoryStore()
 
   useEffect(() => {
@@ -55,8 +57,8 @@ export default function HistoryPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Rename History</h1>
-        <p className="mt-1 text-sm text-gray-500">All past rename jobs, stored locally in your browser.</p>
+        <h1 className="text-2xl font-semibold tracking-tight text-gray-900">{t('historyPage.title')}</h1>
+        <p className="mt-1 text-sm text-gray-500">{t('historyPage.subtitle')}</p>
       </div>
       <HistoryList />
     </div>
