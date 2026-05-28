@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import type { PreviewRow } from '../store/dropZoneStore'
 import { useDropZoneStore } from '../store/dropZoneStore'
 
@@ -7,14 +8,16 @@ interface PreviewTableProps {
   onConfirm: () => void
 }
 
-const statusConfig = {
-  override:  { label: 'override',           className: 'bg-amber-50 text-amber-700 ring-1 ring-amber-200' },
-  stub:      { label: 'stub — review',     className: 'bg-red-50 text-red-600 ring-1 ring-red-200' },
-  low:       { label: 'low confidence',    className: 'bg-orange-50 text-orange-600 ring-1 ring-orange-200' },
-  ready:     { label: 'ready',             className: 'bg-green-50 text-green-700 ring-1 ring-green-200' },
-}
-
 function StatusBadge({ row }: { row: PreviewRow }) {
+  const { t } = useTranslation()
+
+  const statusConfig = {
+    override: { label: t('previewTable.status.override'), className: 'bg-amber-50 text-amber-700 ring-1 ring-amber-200' },
+    stub:     { label: t('previewTable.status.stub'),     className: 'bg-red-50 text-red-600 ring-1 ring-red-200' },
+    low:      { label: t('previewTable.status.low'),      className: 'bg-orange-50 text-orange-600 ring-1 ring-orange-200' },
+    ready:    { label: t('previewTable.status.ready'),    className: 'bg-green-50 text-green-700 ring-1 ring-green-200' },
+  }
+
   const key = row.hasOverride
     ? 'override'
     : row.parsedInvoice?.confidence === 'stub'
@@ -32,6 +35,7 @@ function StatusBadge({ row }: { row: PreviewRow }) {
 
 export function PreviewTable({ rows, onConfirm }: PreviewTableProps) {
   const { updateFinalName } = useDropZoneStore()
+  const { t } = useTranslation()
 
   if (!rows.length) {
     return (
@@ -40,7 +44,7 @@ export function PreviewTable({ rows, onConfirm }: PreviewTableProps) {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
             d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
         </svg>
-        <p className="text-sm text-gray-400">No files to preview yet</p>
+        <p className="text-sm text-gray-400">{t('previewTable.empty')}</p>
       </div>
     )
   }
@@ -51,17 +55,17 @@ export function PreviewTable({ rows, onConfirm }: PreviewTableProps) {
       <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
         <div className="border-b border-gray-100 px-5 py-3">
           <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">
-            {rows.length} file{rows.length !== 1 ? 's' : ''} to rename
+            {t('previewTable.title', { count: rows.length })}
           </span>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100 bg-gray-50/60">
-                <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Original</th>
-                <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Company</th>
-                <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Final name</th>
-                <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Status</th>
+                <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">{t('previewTable.columns.original')}</th>
+                <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">{t('previewTable.columns.company')}</th>
+                <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">{t('previewTable.columns.finalName')}</th>
+                <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">{t('previewTable.columns.status')}</th>
               </tr>
             </thead>
             <tbody>
@@ -100,7 +104,7 @@ export function PreviewTable({ rows, onConfirm }: PreviewTableProps) {
                           }).toString()}`}
                           className="text-xs font-medium text-purple-600 hover:text-purple-500 hover:underline"
                         >
-                          Reportar problema
+                          {t('previewTable.reportLink')}
                         </Link>
                       )}
                     </div>
@@ -114,7 +118,7 @@ export function PreviewTable({ rows, onConfirm }: PreviewTableProps) {
 
       <div className="flex items-center justify-between">
         <p className="text-xs text-gray-400">
-          Edit any filename before confirming. Changes are tracked.
+          {t('previewTable.editHint')}
         </p>
         <button
           type="button"
@@ -126,7 +130,7 @@ export function PreviewTable({ rows, onConfirm }: PreviewTableProps) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
               d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
           </svg>
-          Write files
+          {t('previewTable.confirmButton')}
         </button>
       </div>
     </div>

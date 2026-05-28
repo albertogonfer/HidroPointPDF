@@ -24,7 +24,7 @@ vi.mock('@/adapters/pdf-renaming/store/historyStore', () => ({
 describe('HistoryPage', () => {
   it('renders heading and HistoryList', () => {
     render(<HistoryPage />)
-    expect(screen.getByRole('heading', { name: /rename history/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /rename history|historial de renombres/i })).toBeInTheDocument()
     expect(screen.getByTestId('history-list')).toBeInTheDocument()
   })
 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { BrowserWarning } from '../components/BrowserWarning'
 import { DropZone } from '../components/DropZone'
 import { PreviewTable } from '../components/PreviewTable'
@@ -8,6 +9,7 @@ import { requestRoot, FsaaError } from '../../../infrastructure/fs/fsaaWriter'
 import { confirmRename } from '../../../application/pdf-renaming/use-cases'
 
 export default function IntakePage() {
+  const { t } = useTranslation()
   const { fsaaSupported, checkFsaaSupport, rootFolderHandle, setRootFolderHandle } = useSessionStore()
   const { previewRows, setConfirming, reset } = useDropZoneStore()
   const [fsaaErrorMessage, setFsaaErrorMessage] = useState<string | null>(null)
@@ -43,9 +45,9 @@ export default function IntakePage() {
     <div className="space-y-6">
       {/* Page header */}
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Rename PDFs</h1>
+        <h1 className="text-2xl font-semibold tracking-tight text-gray-900">{t('intakePage.title')}</h1>
         <p className="mt-1 text-sm text-gray-500">
-          Drop invoice PDFs — the app proposes a normalized filename for each one.
+          {t('intakePage.subtitle')}
         </p>
       </div>
 

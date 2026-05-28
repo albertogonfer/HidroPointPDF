@@ -24,7 +24,7 @@ describe('HistoryList', () => {
 
   it('shows empty state when no jobs', () => {
     render(<HistoryList />)
-    expect(screen.getByText(/no history|no jobs|no rename/i)).toBeInTheDocument()
+    expect(screen.getByText(/no history|no jobs|no rename|sin historial/i)).toBeInTheDocument()
   })
 
   it('renders a list of rename jobs', () => {
@@ -62,7 +62,7 @@ describe('HistoryList', () => {
       total: 2,
     })
     render(<HistoryList />)
-    const searchInput = screen.getByPlaceholderText(/search/i)
+    const searchInput = screen.getByPlaceholderText(/search|buscar/i)
     fireEvent.change(searchInput, { target: { value: 'abc' } })
     expect(screen.getByText('invoice-abc.pdf')).toBeInTheDocument()
     expect(screen.queryByText('scan-xyz.pdf')).not.toBeInTheDocument()

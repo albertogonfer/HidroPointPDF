@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom'
 import { Suspense, lazy } from 'react'
+import { useTranslation } from 'react-i18next'
+import { LanguageSwitcher } from './adapters/shared/components/LanguageSwitcher'
 
 const IntakePage = lazy(() => import('./adapters/pdf-renaming/pages/IntakePage'))
 const HistoryPage = lazy(() => import('./adapters/pdf-renaming/pages/HistoryPage'))
@@ -7,6 +9,8 @@ const SettingsPage = lazy(() => import('./adapters/pdf-renaming/pages/SettingsPa
 const FeedbackPage = lazy(() => import('./adapters/feedback-reporting/pages/FeedbackPage'))
 
 export function AppRouter() {
+  const { t } = useTranslation()
+
   return (
     <BrowserRouter>
       <div className="flex min-h-svh flex-col">
@@ -27,9 +31,9 @@ export function AppRouter() {
             {/* Nav */}
             <nav className="flex items-center gap-1">
               {[
-                { to: '/', label: 'Rename', end: true },
-                { to: '/history', label: 'History' },
-                { to: '/settings', label: 'Settings' },
+                { to: '/', label: t('nav.rename'), end: true },
+                { to: '/history', label: t('nav.history') },
+                { to: '/settings', label: t('nav.settings') },
               ].map(({ to, label, end }) => (
                 <NavLink
                   key={to}
@@ -47,6 +51,7 @@ export function AppRouter() {
                   {label}
                 </NavLink>
               ))}
+              <LanguageSwitcher />
             </nav>
           </div>
         </header>
@@ -71,7 +76,7 @@ export function AppRouter() {
 
         {/* Footer */}
         <footer className="border-t border-gray-100 px-6 py-4 text-center text-xs text-gray-400">
-          HidroPoint Barcelona — all data stays in your browser
+          {t('footer.text')}
         </footer>
       </div>
     </BrowserRouter>

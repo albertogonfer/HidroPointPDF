@@ -1,8 +1,10 @@
 import { useCallback, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useDropZoneStore } from '../store/dropZoneStore'
 import { processFile } from '../../../application/pdf-renaming/use-cases'
 
 export function DropZone() {
+  const { t } = useTranslation()
   const { dragActive, confirming, setDragActive, setPendingFiles, setPreviewRows, setConfirming } =
     useDropZoneStore()
 
@@ -65,7 +67,7 @@ export function DropZone() {
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
           </svg>
-          <p className="text-sm font-medium">Processing files…</p>
+          <p className="text-sm font-medium">{t('dropZone.processing')}</p>
         </div>
       ) : (
         <div className={['flex flex-col items-center gap-3', dragActive ? 'text-purple-600' : 'text-gray-400'].join(' ')}>
@@ -77,9 +79,9 @@ export function DropZone() {
           </div>
           <div>
             <p className="text-sm font-semibold text-gray-700">
-              {dragActive ? 'Release to add files' : 'Drop PDF files here'}
+              {dragActive ? t('dropZone.titleRelease') : t('dropZone.title')}
             </p>
-            <p className="mt-0.5 text-xs text-gray-400">Multiple files supported — invoices only</p>
+            <p className="mt-0.5 text-xs text-gray-400">{t('dropZone.subtitle')}</p>
           </div>
         </div>
       )}
