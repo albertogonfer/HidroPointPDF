@@ -2,10 +2,6 @@
   "buildCommand": "pnpm build",
   "headers": [
     {
-      "source": "/api/(.*)",
-      "headers": []
-    },
-    {
       "source": "/((?!api/).*)",
       "headers": [
         { "key": "Cross-Origin-Opener-Policy", "value": "same-origin" },
